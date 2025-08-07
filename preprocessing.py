@@ -26,6 +26,10 @@ def preprocess_input(df, ref_values):
     df['PostalCode'] = df['PostalCode'].fillna(ref_values['PostalCode']).astype('category')
     df['PropertyType'] = df['PropertyType'].fillna(ref_values['PropertyType']).astype('category')
 
-    df['LargeLot'] = df['LargeLot'].fillna('Unknown').astype('category')
+    # Add 'Unknown' category before filling
+    df['LargeLot'] = df['LargeLot'].astype('category')
+    if 'Unknown' not in df['LargeLot'].cat.categories:
+        df['LargeLot'] = df['LargeLot'].cat.add_categories(['Unknown'])
+    df['LargeLot'] = df['LargeLot'].fillna('Unknown')
 
     return df[ALL_FEATURES]
